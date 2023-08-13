@@ -3,7 +3,9 @@ package telran.employees.test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -122,6 +124,43 @@ class CompanyTest {
 	@Order(1)
 	void testSave() {
 		company.save(TEST_DATA);
+	}
+	private void runGetByDepartmentTest(String department, Employee[] expected) {
+		List<Employee> employees = company.getEmployeesByDepartment(department);
+		employees.sort((e1, e2) -> Long.compare(e1.id(), e2.id()));
+		assertArrayEquals(expected, employees.toArray(Employee[]::new));
+	}
+	private void runGetBySalaryTest(int salaryFrom, int salaryTo,
+			Employee[]expected) {
+		List<Employee> employees = new ArrayList<>
+		(company.getEmployeesBySalary(salaryFrom, salaryTo));
+				
+		
+		employees.sort((e1, e2) -> Long.compare(e1.id(), e2.id()));
+		assertArrayEquals(expected, employees.toArray(Employee[]::new));
+	}
+	@Test
+	void getEmployeesByDepartmentTest() {
+		runGetByDepartmentTest("XXX", new Employee[0]);
+		runGetByDepartmentTest(DEP1, new Employee[] {empl1, empl3});
+	}
+	@Test
+	void updateDepartmentTest() {
+		company.updateDepartment(ID5, DEP1);
+		runGetByDepartmentTest(DEP1, new Employee[] {empl1, empl3, empl5});
+		runGetByDepartmentTest(DEP3, new Employee[0]);
+	}
+	@Test
+	void getEmployeesBySalaryTest() {
+		runGetBySalaryTest(SALARY2, SALARY3, employees);
+		runGetBySalaryTest(SALARY3 + 1, 100000000, new Employee[0]);
+		runGetBySalaryTest(SALARY2, SALARY1, new Employee[] {empl1, empl2, empl3, empl4});
+	}
+	@Test
+	void updateSalaryTest() {
+		company.updateSalary(ID5, SALARY1);
+		runGetBySalaryTest(SALARY3, SALARY3 + 1, new Employee[0]);
+		runGetBySalaryTest(SALARY2, SALARY1,employees);
 	}
 
 }
