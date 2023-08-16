@@ -1,127 +1,92 @@
-package telran.employees.test;
+package telran.view.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
-import telran.employees.dto.*;
-import telran.employees.service.Company;
-import telran.employees.service.CompanyImpl;
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CompanyTest {
-	private static final long ID1 = 123;
-	private static final String DEP1 = "dep1";
-	private static final int SALARY1 = 10000;
-	private static final int YEAR1 = 2000;
-	private static final LocalDate DATE1 = LocalDate.ofYearDay(YEAR1, 100);
-	private static final long ID2 = 124;
-	private static final long ID3 = 125;
-	private static final long ID4 = 126;
-	private static final long ID5 = 127;
-	private static final String DEP2 = "dep2";
-	private static final String DEP3 = "dep3";
-	private static final int SALARY2 = 5000;
-	private static final int SALARY3 = 15000;
-	private static final int YEAR2 = 1990;
-	private static final LocalDate DATE2 = LocalDate.ofYearDay(YEAR2, 100);
-	private static final int YEAR3 = 2003;
-	private static final LocalDate DATE3 = LocalDate.ofYearDay(YEAR3, 100);
-	private static final long ID_NOT_EXIST = 10000000;
-	private static final String TEST_DATA = "test.data";
-	Employee empl1 = new Employee(ID1, "name", DEP1, SALARY1, DATE1);
-	Employee empl2 = new Employee(ID2, "name", DEP2, SALARY2, DATE2);
-	Employee empl3 = new Employee(ID3, "name", DEP1, SALARY1, DATE1);
-	Employee empl4 = new Employee(ID4, "name", DEP2, SALARY2, DATE2);
-	Employee empl5 = new Employee(ID5, "name", DEP3, SALARY3, DATE3);
-	Employee[] employees = {empl1, empl2, empl3, empl4, empl5};
-	Company company;
+import telran.view.console.ConsoleInputOutput;
 
+class ConsoleInputOutputTest {
+ConsoleInputOutput io = new ConsoleInputOutput();
 	@BeforeEach
 	void setUp() throws Exception {
-		company = new CompanyImpl();
-		for(Employee empl: employees) {
-			company.addEmployee(empl);
-		}
 	}
 
 	@Test
-	void testAddEmployee() {
-		assertFalse(company.addEmployee(empl1));
-		assertTrue(company.addEmployee(new Employee(ID_NOT_EXIST, "name", DEP1, SALARY1, DATE1)));
+	
+	void testReadObject() {
+		int[] numbers = io.readObject("Enter two integer numbers separated by #",
+				"Must be two numbers", str -> {
+					String[] numbersStr = str.split("#");
+					return new int[] {Integer.parseInt(numbersStr[0]),
+							Integer.parseInt(numbersStr[1])
+					};
+				});
+		io.writeLine("Sum of entered numbers is " + (numbers[0] + numbers[1]));
 	}
 
 	@Test
-	void testRemoveEmployee() {
-		assertNull(company.removeEmployee(ID_NOT_EXIST));
-		assertEquals(empl1, company.removeEmployee(ID1));
-		Employee[] expected = {empl2, empl3, empl4, empl5};
-		assertArrayEquals(expected, company.getEmployees()
-				.toArray(Employee[]::new));
-		
+	void testReadInt() {
+		int number = io.readInt("Enter any integer number", "It's no an integer number");
+		io.writeLine("Entered integer number is " + number);
 	}
 
 	@Test
-	void testGetEmployee() {
-		assertEquals(empl1, company.getEmployee(ID1));
-		assertNull(company.getEmployee(ID_NOT_EXIST));
+	void testReadIntRange() {
+		int number = io.readInt("Enter integer number", "Wrong number", 10, 20);
+		io.writeLine("Entered number is " + number);
 	}
 
 	@Test
-	void testGetEmployees() {
-		assertArrayEquals(employees, company.getEmployees()
-				.toArray(Employee[]::new));
+	void testReadLong() {
+		long number = io.readLong("Enter any long number", "It's no a long number");
+		io.writeLine("Entered long number is " + number);
 	}
 
 	@Test
-	void testGetDepartmentSalaryDistribution() {
-		DepartmentSalary [] expected = {
-			new DepartmentSalary(DEP2, SALARY2),
-			new DepartmentSalary(DEP1, SALARY1),
-			new DepartmentSalary(DEP3, SALARY3)
-		};
-		DepartmentSalary [] actual = company.getDepartmentSalaryDistribution()
-				.stream().sorted((ds1, ds2) -> Double.compare(ds1.salary(), ds2.salary())).
-				toArray(DepartmentSalary[]::new);
-		assertArrayEquals(expected, actual);
+	void testReadLongRange() {
+		long number = io.readLong("Enter long number", "Wrong number",
+				Integer.MAX_VALUE, Long.MAX_VALUE);
+		io.writeLine("Entered long number is " + number);
 	}
 
 	@Test
-	void testGetSalaryDistribution() {
-		int interval = 5000;
-		SalaryDistribution[] expected = {
-				new SalaryDistribution(SALARY2, SALARY2 + interval - 1, 2),
-				new SalaryDistribution(SALARY1, SALARY1 + interval - 1, 3),
-				new SalaryDistribution(SALARY3, SALARY3 + interval - 1, 1),
-		};
-		company.addEmployee(new Employee(ID_NOT_EXIST, DEP2, DEP2, 13000,  DATE1));
-		SalaryDistribution[] actual =
-				company.getSalaryDistribution(interval)
-				.toArray(SalaryDistribution[]::new);
-		assertArrayEquals(expected, actual);
+	void testReadStringPredicate() {
+		String line = io.readString("Enter string with 4 symbols",
+				"Must be 4 symbols", str -> str.length() == 4);
+		io.writeLine("Entered string is " + line);
 	}
 
 	@Test
-	@Order(2)
-	void testRestore() {
-		Company newCompany = new CompanyImpl();
-		newCompany.restore(TEST_DATA);
-		assertArrayEquals(employees, newCompany.getEmployees()
-				.toArray(Employee[]::new));
-		
+	void testReadStringOptions() {
+		String line = io.readString("Enter either apple or orange",
+				"Neither apple nor orange", new HashSet<>
+		(Arrays.asList("apple", "orange")));
+		io.writeLine("Entered string is " + line);
 	}
 
 	@Test
-	@Order(1)
-	void testSave() {
-		company.save(TEST_DATA);
+	void testReadDate() {
+		LocalDate date = io.readDate("Enter any date in ISO format", "It's no a date");
+		io.writeLine("Entered date is " + date);
+	}
+
+	@Test
+	void testReadDateRange() {
+		LocalDate date = io.readDate("Enter any date in the past",
+				"Wrong past date", LocalDate.MIN, LocalDate.now().minusDays(1));
+		io.writeLine("Entered date is " + date);
+	}
+
+	@Test
+	void testReadDouble() {
+		double number = io.readDouble("Enter any number", "It's no a number");
+		io.writeLine("Entered number is " + number);
 	}
 
 }
