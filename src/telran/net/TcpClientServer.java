@@ -2,9 +2,9 @@ package telran.net;
 import java.net.*;
 import java.io.*;
 public class TcpClientServer implements Runnable {
-	Socket socket;
-	ObjectInputStream input;
-	ObjectOutputStream output;
+	private Socket socket;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
 	ApplProtocol protocol;
 	public TcpClientServer(Socket socket,ApplProtocol protocol) throws IOException {
 		this.socket = socket;
