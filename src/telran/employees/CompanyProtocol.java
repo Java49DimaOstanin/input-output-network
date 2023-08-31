@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import telran.employees.dto.Employee;
+import telran.employees.dto.FromTo;
 import telran.employees.dto.UpdateData;
 import telran.employees.service.Company;
 import telran.net.ApplProtocol;
@@ -25,8 +26,15 @@ public class CompanyProtocol implements ApplProtocol {
 		try {
 			Serializable responseData = switch(requestType) {
 			case "employee/add" -> employee_add(data);
+			case "employee/remove" -> removeEmployee(data);
 			case "employee/get" -> employee_get(data);
 			case "employees/get" -> employees_get(data);
+			case "department/salary/distribution" -> department_salary_distribution(data);
+			case "salary/distribution" -> salary_distribution(data);
+			case "employees/department" -> employees_department(data);
+			case "employees/salary" -> employees_salary(data);
+			case "employees/age" -> employees_age(data);
+			case "salary/update" -> salary_update(data);
 			case "department/update"-> department_update(data);
 				default -> new Response(ResponseCode.WRONG_TYPE, requestType + " is unsupported in the Company Protocol");
 			};
@@ -36,6 +44,46 @@ public class CompanyProtocol implements ApplProtocol {
 			response = new Response(ResponseCode.WRONG_DATA,e.toString());
 		}
 		return response;
+	}
+	Serializable salary_update(Serializable data) {
+		@SuppressWarnings("unchecked")
+		UpdateData<Integer> updateData = (UpdateData<Integer>) data;
+		long id = updateData.id();
+		int newsalary = updateData.data();
+		return company.updateSalary(id, newsalary);
+	}
+	Serializable employees_age(Serializable data) {
+		
+		FromTo fromTo = (FromTo) data;
+		int from = fromTo.from();
+		int to   = fromTo.to();
+		return new ArrayList<>(company.getEmployeesByAge(from, to));
+		
+	}
+	Serializable employees_salary(Serializable data) {
+		FromTo fromTo = (FromTo) data;
+		int from = fromTo.from();
+		int to   = fromTo.to();
+		return new ArrayList<>(company.getEmployeesBySalary(from, to));
+	}
+	Serializable employees_department(Serializable data) {
+		
+		String department =  (String) data;
+		
+		return new ArrayList<>(company.getEmployeesByDepartment(department));
+	}
+	Serializable salary_distribution(Serializable data) {
+		int interval = (int) data;
+		return new ArrayList<>(company.getSalaryDistribution(interval));
+	}
+	Serializable department_salary_distribution(Serializable data) {
+		
+		
+		return new ArrayList<>(company.getDepartmentSalaryDistribution());
+	}
+	Serializable removeEmployee(Serializable data) {
+		long id= (long) data;
+		return company.removeEmployee(id);
 	}
 	Serializable department_update(Serializable data) {
 		@SuppressWarnings("unchecked")
