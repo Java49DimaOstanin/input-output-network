@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 public interface InputOutput {
 	public String readString(String prompt);
 
-	public void write(Object obj) ;
+	public void write(Object obj);
 
 	default void writeLine(Object obj) {
 		write(obj + "\n");

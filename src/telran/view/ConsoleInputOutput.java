@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ConsoleInputOutput implements InputOutput {
+public class ConsoleInputOutput implements InputOutput{
 	private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 	private PrintStream output = System.out;
 

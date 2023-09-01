@@ -31,15 +31,15 @@ static Company company;
 	private static Item[] getItems() {
 		
 		return new Item[] {
-				Item.of(" Add new Employee", CompanyController::addEmployeeItem),
-				Item.of(" Remove Employee", CompanyController::removeEmployeeItem),
-				Item.of(" All Employees", CompanyController::getEmployeesItem),
-				Item.of(" Data about Employee", CompanyController::getEmployeeItem),
+				Item.of("Add new Employee", CompanyController::addEmployeeItem),
+				Item.of("Remove Employee", CompanyController::removeEmployeeItem),
+				Item.of("All Employees", CompanyController::getEmployeesItem),
+				Item.of("Data about Employee", CompanyController::getEmployeeItem),
 				Item.of(" Employees by Salary", CompanyController::getEmployeesBySalaryItem),
-				Item.of(" Employees by Department", CompanyController::getEmployeesByDepartmentItem),
-				Item.of(" Update salary", CompanyController::updateSalaryItem),
-				Item.of(" Departments and Salary", CompanyController::getDepartmentSalaryDistributionItem),
-				Item.of(" Distribution by Salary", CompanyController::getSalaryDistributionItem),
+				Item.of("Employees by Department", CompanyController::getEmployeesByDepartmentItem),
+				Item.of("Update salary", CompanyController::updateSalaryItem),
+				Item.of("Departments and Salary", CompanyController::getDepartmentSalaryDistributionItem),
+				Item.of("Distribution by Salary", CompanyController::getSalaryDistributionItem),
 				Item.of("Employees by Age", CompanyController::getEmployeesByAgeItem),
 				Item.of("Update Department", CompanyController::updateDepartmentItem)
 		};

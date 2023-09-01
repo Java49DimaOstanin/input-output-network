@@ -8,15 +8,13 @@ public class Menu implements Item {
 	private static final int N_SYMBOLS = 20;
 	String name;
 	ArrayList<Item> items;
-	
-	public Menu(String name,ArrayList<Item> items){
+	public Menu(String name, ArrayList<Item> items) {
 		this.name = name;
 		this.items = items;
 	}
-	public Menu(String name ,Item ...items){
-		this(name,new ArrayList<>(Arrays.asList(items)));
+	public Menu (String name, Item ...items) {
+		this(name, new ArrayList<>(Arrays.asList(items)));
 	}
-	
 	@Override
 	public String displayName() {
 		
@@ -30,26 +28,27 @@ public class Menu implements Item {
 			try {
 				displayTitle(io);
 				displayItemNames(io);
-				int itemNumber = io.readInt("Select item","Wrong item number", 1,items.size());
-				Item item =	items.get(itemNumber - 1);
+				int itemNumber = io.readInt("Enter item number", "Wrong item number",
+						1, items.size());
+				Item item = items.get(itemNumber - 1);
 				item.perform(io);
 				running = !item.isExit();
 			} catch (Throwable e) {
-				io.writeLine(name);
-						
+				io.writeLine(e.getMessage());
 			}
-		}while(running);
+		} while(running);
 
 	}
 
+	private void displayItemNames(InputOutput io) {
+		IntStream.rangeClosed(1, items.size())
+		.forEach(i -> io.writeLine(i + ". " + items.get(i - 1).displayName()));
+		
+	}
 	private void displayTitle(InputOutput io) {
 		io.write("*".repeat(N_SYMBOLS));
 		io.write(name);
 		io.writeLine("*".repeat(N_SYMBOLS));
-		
-	}
-	private void displayItemNames(InputOutput io) {
-		IntStream.rangeClosed(1, items.size()).forEach(i -> io.writeLine(i + ". "+ items.get(i - 1).displayName()));
 		
 	}
 	@Override

@@ -1,5 +1,9 @@
 package telran.employees.dto;
 
-public record SalaryDistribution(int minSalary, int maxSalary,int amountEmployee) {
+import java.io.Serializable;
+
+public record SalaryDistribution(int minSalary, int maxSalary,
+		int amountEmployees) implements Serializable
+{
 
 }

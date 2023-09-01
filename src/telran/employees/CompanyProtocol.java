@@ -74,7 +74,7 @@ public class CompanyProtocol implements ApplProtocol {
 	}
 	Serializable salary_distribution(Serializable data) {
 		int interval = (int) data;
-		return new ArrayList<>(company.getSalaryDistribution(interval));
+		return (Serializable) company.getSalaryDistribution(interval);
 	}
 	Serializable department_salary_distribution(Serializable data) {
 		
