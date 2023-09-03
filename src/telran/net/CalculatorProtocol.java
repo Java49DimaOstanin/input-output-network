@@ -1,11 +1,11 @@
 package telran.net;
 
-public class CalculatorProtocol implements ApplProtocol{
+
+public class CalculatorProtocol implements ApplProtocol {
 
 	@Override
 	public Response getResponse(Request request) {
-		
-		Response response = null;	
+		Response response = null;
 		
 		try {
 			double[] operands = (double[])request.requestData();
@@ -26,7 +26,5 @@ public class CalculatorProtocol implements ApplProtocol{
 		}
 	}
 
-	}
 	
-
-
+}
