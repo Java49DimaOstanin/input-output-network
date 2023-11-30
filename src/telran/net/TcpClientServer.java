@@ -9,9 +9,10 @@ public class TcpClientServer implements Runnable {
 	ObjectOutputStream output;
 	ApplProtocol protocol;
 	TcpServer tcpServer;
-	final static int TOTAL_IDLE_TIMEOUT = 30000;  
+	final static int TOTAL_IDLE_TIMEOUT=30000;
 	int idleTime = 0;
-	public TcpClientServer(Socket socket, ApplProtocol protocol, TcpServer tcpServer) throws IOException {
+	public TcpClientServer(Socket socket, ApplProtocol protocol,
+			TcpServer tcpServer) throws IOException {
 		this.socket = socket;
 		this.socket.setSoTimeout(TcpServer.IDLE_TIMEOUT);
 		input = new ObjectInputStream(socket.getInputStream());
@@ -28,18 +29,18 @@ public class TcpClientServer implements Runnable {
 				Request request = (Request) input.readObject();
 				Response response = protocol.getResponse(request);
 				output.writeObject(response);
-				}
-				catch(SocketTimeoutException e) {
+				
+				} catch(SocketTimeoutException e) {
 					idleTime += TcpServer.IDLE_TIMEOUT;
-					if(idleTime > TOTAL_IDLE_TIMEOUT && tcpServer.clientsCounter.get() > tcpServer.nThreads) {
+					if(idleTime > TOTAL_IDLE_TIMEOUT &&
+							tcpServer.clientsCounter.get() > tcpServer.nThreads) {
 						try {
 							socket.close();
 							
 						} catch (IOException e1) {
-							
 							e1.printStackTrace();
 						}
-						System.out.println("socket closed - idle time exeeds total timeout ");
+						System.out.println("socket closed - idle time exeeds total timeout");
 						break;
 					}
 					if(tcpServer.isShutdown) {
@@ -49,7 +50,7 @@ public class TcpClientServer implements Runnable {
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
-						System.out.println("socket closed -  Server has been shutdown ");
+						System.out.println("socket closed - server has been shutdown");
 						break;
 					}
 				}
@@ -61,9 +62,10 @@ public class TcpClientServer implements Runnable {
 				+ e.getMessage());
 					break;
 				}
-				tcpServer.clientsCounter.decrementAndGet();
+				
+				
 			}
-			
+			tcpServer.clientsCounter.decrementAndGet();
 		
 
 	}
